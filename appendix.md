@@ -2,7 +2,7 @@
 
 This appendix supports the **TLU White Paper** by collecting formal definitions, truth tables, and clarifying notes that are intentionally kept out of the main document.
 
-Sections marked **Normative** define required semantics. Other sections are informative.
+Sections marked **Normative** define required semantics. Other sections are informative and non-binding.
 
 ---
 
@@ -43,7 +43,7 @@ This appendix specifies *semantic meaning only*. Alternative internal encodings 
 
 ## C. Formal Truth Tables and Definitions (Normative)
 
-### C.0 Domain
+### C.0 Domain and Vector Semantics
 
 Let the trit domain be:
 
@@ -51,7 +51,7 @@ Let the trit domain be:
 𝕋 = { −1, 0, +1 }
 ```
 
-All operators defined below act on elements of `𝕋`. For vectors or words, operators apply lane-wise unless explicitly stated otherwise.
+All scalar operators act on elements of `𝕋`. For vectors or words, operators apply **lane-wise** unless explicitly stated otherwise. Reduction operators specify their aggregation semantics independently of storage or representation.
 
 ---
 
@@ -83,14 +83,16 @@ These definitions treat `0` as a first-class middle value and require no special
 |  **0** |  0  |  0  |  +1 |
 | **+1** |  +1 |  +1 |  +1 |
 
-#### Properties
+#### Properties (Informative)
 
 * Commutative: `TMIN(a,b) = TMIN(b,a)` and `TMAX(a,b) = TMAX(b,a)`
+* Associative: `TMIN(a, TMIN(b,c)) = TMIN(TMIN(a,b), c)` (same for `TMAX`)
 * Idempotent: `TMIN(a,a) = a` and `TMAX(a,a) = a`
 * Absorption:
 
   * `TMIN(a, TMAX(a,b)) = a`
   * `TMAX(a, TMIN(a,b)) = a`
+* Monotonic: increasing any argument cannot decrease `TMAX` or increase `TMIN`
 
 ---
 
@@ -125,11 +127,12 @@ Let `(n−, n0, n+)` be the counts of `−1`, `0`, and `+1` among the inputs.
 |      (0,1,2) | (0,+1,+1)  |   +1   |
 |      (0,0,3) | (+1,+1,+1) |   +1   |
 
-#### Properties
+#### Properties (Informative)
 
 * Symmetric under permutation of inputs
 * Idempotent: `TMAJ(a,a,b) = a`
 * Median law: the result is always one of the inputs and lies between the other two
+* Stability: replacing one input with the result does not change the outcome
 
 ---
 
@@ -151,7 +154,7 @@ Zeros contribute no value.
 TNET(x) ∈ [ −N , +N ]
 ```
 
-The numeric value is normative. Its binary or ternary integer representation is outside the scope of this definition.
+The numeric value is normative. The representation of that value (binary integer, balanced ternary integer, saturation behavior) is **explicitly out of scope** and delegated to the consuming context.
 
 #### Examples
 
@@ -159,10 +162,53 @@ The numeric value is normative. Its binary or ternary integer representation is 
 * `(−1,−1,−1,0,+1,0,+1,0)` → `−1`
 * `(0,0,0,0,0,0,0,0)` → `0`
 
-#### Properties
+#### Properties (Informative)
 
 * Linearity: `TNET(x ∪ y) = TNET(x) + TNET(y)` when lane-wise addition does not overflow outside `𝕋`
 * Sign symmetry: `TNET(−x) = −TNET(x)` where `−x` is lane-wise negation
+* Neutral invariance: adding or removing `0` lanes does not affect the result
+
+---
+
+### C.4 TNOT (Unary Negation)
+
+#### Definition
+
+`TNOT(a)` returns the additive inverse of `a` in balanced ternary.
+
+#### Truth Table
+
+|  a  | TNOT(a) |
+| :-: | :-----: |
+|  −1 |    +1   |
+|  0  |    0    |
+|  +1 |    −1   |
+
+#### Properties (Informative)
+
+* Involutive: `TNOT(TNOT(a)) = a`
+* Neutral preserving: `TNOT(0) = 0`
+* Sign symmetry: `TNOT(a) = −a`
+
+---
+
+### C.5 TMUX (Ternary Select)
+
+#### Definition
+
+`TMUX(cond, A, B, C)` selects one of three values based on a ternary condition:
+
+| cond | result |
+| :--: | :----: |
+|  −1  |    A   |
+|   0  |    B   |
+|  +1  |    C   |
+
+#### Properties (Informative)
+
+* Deterministic: exactly one branch is selected
+* Side-effect free: selection does not modify inputs
+* Vectorizable: applies lane-wise for vector conditions
 
 ---
 
@@ -187,6 +233,20 @@ Recommended minimal tests:
 * `TMAJ(−1,0,+1)=0` (all permutations)
 * `TMAJ(+1,+1,0)=+1`, `TMAJ(−1,−1,+1)=−1`
 * `TNET([+1,−1,0])=0`, `TNET([+1,+1,−1])=+1`
+* `TNOT(−1)=+1`, `TNOT(0)=0`, `TNOT(+1)=−1`
+* `TMUX(−1,A,B,C)=A`, `TMUX(0,A,B,C)=B`, `TMUX(+1,A,B,C)=C`
+
+---
+
+## F. Informative Context and Analogues (Informative)
+
+The semantics defined in this appendix correspond to patterns that already appear in existing systems:
+
+* Three-valued logic in database systems (e.g., SQL `NULL` semantics)
+* Median and majority filters in signal processing
+* Majority voting and balance checks in fault-tolerant systems
+
+These analogues are provided solely for orientation and do not imply performance equivalence or preferred application domains.
 
 ---
 
