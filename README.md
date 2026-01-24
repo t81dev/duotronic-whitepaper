@@ -56,3 +56,5 @@ The goal is clarity and falsifiability, not momentum.
 ## License
 
 MIT
+
+This repository is frozen at v0.2 except for errata. Experimental work lives elsewhere.
