@@ -2,13 +2,13 @@
 """
 ternary_reference.py
 
-Reference (software-fallback) semantics for TLU operations.
+Reference (software-fallback) semantics for core TLU operations.
 This module is intentionally simple, deterministic, and test-friendly.
 
 Domain:
   𝕋 = { -1, 0, +1 }
 
-Encoding (optional, canonical interoperability):
+Canonical 2-bit encoding (optional interoperability):
   00 -> -1
   01 ->  0
   10 -> +1
@@ -17,8 +17,7 @@ Encoding (optional, canonical interoperability):
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Iterable, List, Sequence, Tuple, Union
+from typing import Iterable, List, Sequence
 
 
 Trit = int  # must be -1, 0, +1
@@ -75,7 +74,7 @@ def encode_bct_2bit(x: int) -> int:
 
 
 # -----------------------------
-# Core TLU operations
+# Core TLU operations (scalar)
 # -----------------------------
 
 def tmin(a: int, b: int) -> Trit:
@@ -92,18 +91,12 @@ def tmax(a: int, b: int) -> Trit:
 
 def tnot(a: int) -> Trit:
     """TNOT(a) = additive inverse in balanced ternary."""
-    a = trit(a)
-    return -a  # maps -1->+1, 0->0, +1->-1
+    return -trit(a)  # maps -1->+1, 0->0, +1->-1
 
 
 def tmaj(a: int, b: int, c: int) -> Trit:
     """
     TMAJ(a,b,c) = median of {a,b,c} under ordering -1 < 0 < +1.
-
-    Equivalent:
-      if at least two are +1 => +1
-      elif at least two are -1 => -1
-      else => 0
     """
     a, b, c = trit(a), trit(b), trit(c)
     s = sorted((a, b, c))
@@ -141,13 +134,23 @@ def tnet(xs: Iterable[int]) -> int:
 # Lane-wise vector helpers
 # -----------------------------
 
+def _require_same_len(*seqs: Sequence[object]) -> int:
+    """Raise ValueError if sequences differ in length; return common length."""
+    if not seqs:
+        raise ValueError("At least one sequence is required.")
+    n = len(seqs[0])
+    if any(len(s) != n for s in seqs[1:]):
+        raise ValueError("All input sequences must have the same length.")
+    return n
+
+
 def tmin_vec(a: TritSeq, b: TritSeq) -> List[Trit]:
-    assert len(a) == len(b)
+    _require_same_len(a, b)
     return [tmin(x, y) for x, y in zip(a, b)]
 
 
 def tmax_vec(a: TritSeq, b: TritSeq) -> List[Trit]:
-    assert len(a) == len(b)
+    _require_same_len(a, b)
     return [tmax(x, y) for x, y in zip(a, b)]
 
 
@@ -156,12 +159,12 @@ def tnot_vec(a: TritSeq) -> List[Trit]:
 
 
 def tmaj_vec(a: TritSeq, b: TritSeq, c: TritSeq) -> List[Trit]:
-    assert len(a) == len(b) == len(c)
+    _require_same_len(a, b, c)
     return [tmaj(x, y, z) for x, y, z in zip(a, b, c)]
 
 
 def tmux_vec(cond: TritSeq, A: TritSeq, B: TritSeq, C: TritSeq) -> List[Trit]:
-    assert len(cond) == len(A) == len(B) == len(C)
+    _require_same_len(cond, A, B, C)
     return [tmux(k, a, b, c) for k, a, b, c in zip(cond, A, B, C)]
 
 
@@ -175,7 +178,7 @@ def _assert_eq(got, exp, msg: str = "") -> None:
 
 
 def run_minimal_tests() -> None:
-    # TMIN / TMAX
+    # TMIN / TMAX (reference vectors)
     _assert_eq(tmin(+1, 0), 0, "TMIN(+1,0)")
     _assert_eq(tmin(0, -1), -1, "TMIN(0,-1)")
     _assert_eq(tmin(+1, -1), -1, "TMIN(+1,-1)")
@@ -210,8 +213,48 @@ def run_minimal_tests() -> None:
     _assert_eq(decode_bct_2bit(0b11), 0, "decode invalid -> 0")
     _assert_eq(encode_bct_2bit(123), 0b01, "encode invalid -> 0")
 
+    # Algebraic sanity (informative properties)
+    dom = (-1, 0, +1)
+    for a in dom:
+        for b in dom:
+            _assert_eq(tmin(a, b), tmin(b, a), f"TMIN commutes ({a},{b})")
+            _assert_eq(tmax(a, b), tmax(b, a), f"TMAX commutes ({a},{b})")
+            _assert_eq(tmin(a, a), a, f"TMIN idempotent ({a})")
+            _assert_eq(tmax(a, a), a, f"TMAX idempotent ({a})")
+            _assert_eq(tmin(a, tmax(a, b)), a, f"TMIN absorption ({a},{b})")
+            _assert_eq(tmax(a, tmin(a, b)), a, f"TMAX absorption ({a},{b})")
+
+        _assert_eq(tnot(tnot(a)), a, f"TNOT involution ({a})")
+
     print("OK: minimal reference tests passed.")
+
+
+def run_exhaustive_tests() -> None:
+    """Optional exhaustive checks: TMAJ (3^3) and TMUX (3*3^3)."""
+    dom = (-1, 0, +1)
+
+    # Exhaustive TMAJ: 27 cases
+    for a in dom:
+        for b in dom:
+            for c in dom:
+                s = sorted((a, b, c))
+                _assert_eq(tmaj(a, b, c), s[1], f"TMAJ median ({a},{b},{c})")
+
+    # Exhaustive TMUX: 81 cases
+    for cond in dom:
+        for A in dom:
+            for B in dom:
+                for C in dom:
+                    exp = A if cond == -1 else (B if cond == 0 else C)
+                    _assert_eq(tmux(cond, A, B, C), exp, f"TMUX ({cond},{A},{B},{C})")
+
+    print("OK: exhaustive reference tests passed.")
 
 
 if __name__ == "__main__":
     run_minimal_tests()
+
+    # Enable heavier checks via: TLU_EXHAUSTIVE=1 python ternary_reference.py
+    import os
+    if os.getenv("TLU_EXHAUSTIVE") == "1":
+        run_exhaustive_tests()
