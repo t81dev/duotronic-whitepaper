@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600" viewBox="0 0 1100 600">
+  <style>
+    .box { fill:#fff; stroke:#111; stroke-width:2; }
+    .title { font:700 20px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#111; }
+    .h { font:700 16px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#111; }
+    .t { font:14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#111; }
+    .mono { font:13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; fill:#111; }
+  </style>
+
+  <text class="title" x="550" y="44" text-anchor="middle">Same intent: three-valued meaning (−1 / 0 / +1)</text>
+
+  <!-- Left: binary simulation -->
+  <rect class="box" x="70" y="80" width="460" height="460" rx="14"/>
+  <text class="title" x="300" y="120" text-anchor="middle">Binary simulation (typical)</text>
+
+  <text class="h" x="110" y="165">Represent unknown/neutral via</text>
+  <text class="t" x="130" y="192">• flags / masks</text>
+  <text class="t" x="130" y="214">• NaN-like conventions</text>
+  <text class="t" x="130" y="236">• sentinels / tagging</text>
+
+  <text class="h" x="110" y="285">Implement 3-valued logic via</text>
+  <text class="t" x="130" y="312">• multi-step bit tricks</text>
+  <text class="t" x="130" y="334">• extra compares</text>
+  <text class="t" x="130" y="356">• branchy control flow</text>
+
+  <text class="h" x="110" y="405">Costs tend to appear as</text>
+  <text class="t" x="130" y="432">• instruction count</text>
+  <text class="t" x="130" y="454">• branch pressure</text>
+  <text class="t" x="130" y="476">• semantic fragility</text>
+
+  <!-- Right: ternary-native -->
+  <rect class="box" x="570" y="80" width="460" height="460" rx="14"/>
+  <text class="title" x="800" y="120" text-anchor="middle">Ternary-native (TLU / ABI)</text>
+
+  <text class="h" x="610" y="165">Unknown/neutral is a value</text>
+  <text class="mono" x="630" y="192">0 is first-class</text>
+
+  <text class="h" x="610" y="240">Semantics are explicit</text>
+  <text class="t" x="630" y="267">• truth tables</text>
+  <text class="t" x="630" y="289">• deterministic propagation</text>
+
+  <text class="h" x="610" y="338">Implemented as</text>
+  <text class="t" x="630" y="365">• single semantic ops</text>
+  <text class="t" x="630" y="387">• vector lanes / packed trits</text>
+  <text class="t" x="630" y="409">• software fallback always valid</text>
+
+  <text class="h" x="610" y="458">Costs tend to appear as</text>
+  <text class="t" x="630" y="485">• bounded pack/decode overhead</text>
+  <text class="t" x="630" y="507">• reduced convention overhead</text>
+</svg>

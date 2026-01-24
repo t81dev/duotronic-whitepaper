@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540">
+  <style>
+    .box { fill:#fff; stroke:#111; stroke-width:2; }
+    .title { font:700 20px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#111; }
+    .h { font:700 16px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#111; }
+    .t { font:14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#111; }
+    .mono { font:13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; fill:#111; }
+    .arrow { stroke:#111; stroke-width:2.2; fill:none; marker-end:url(#m); }
+    .note { font: italic 13px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill:#111; }
+  </style>
+
+  <defs>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#111"/>
+    </marker>
+  </defs>
+
+  <!-- CPU -->
+  <rect class="box" x="120" y="70" width="660" height="120" rx="14"/>
+  <text class="title" x="450" y="110" text-anchor="middle">CPU (binary)</text>
+  <text class="t" x="450" y="140" text-anchor="middle">control · addressing · exact storage · orchestration</text>
+  <text class="note" x="450" y="168" text-anchor="middle">TLU does not replace this layer</text>
+
+  <!-- Arrow -->
+  <path class="arrow" d="M450 190 L450 240"/>
+  <text class="note" x="465" y="230">opt-in semantic ops</text>
+
+  <!-- TLU -->
+  <rect class="box" x="230" y="250" width="440" height="160" rx="14"/>
+  <text class="title" x="450" y="290" text-anchor="middle">TLU (ternary semantic surface)</text>
+  <text class="h" x="270" y="330">Intentionally small:</text>
+  <text class="mono" x="290" y="360">TMIN   TMAX</text>
+  <text class="mono" x="290" y="384">TNOT   TMAJ</text>
+  <text class="mono" x="290" y="408">TMUX   TNET</text>
+
+  <!-- Arrow -->
+  <path class="arrow" d="M450 410 L450 460"/>
+  <text class="note" x="465" y="450">fallback always valid</text>
+
+  <!-- Software ref -->
+  <rect class="box" x="170" y="470" width="560" height="55" rx="14"/>
+  <text class="h" x="450" y="505" text-anchor="middle">Software reference / ABI</text>
+  <text class="t" x="450" y="526" text-anchor="middle">intrinsics · helper library · tests · vector backends</text>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="760" viewBox="0 0 1100 760">
+  <style>
+    .box { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+    .title { font: 700 20px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #111; }
+    .h { font: 700 16px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #111; }
+    .t { font: 14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #111; }
+    .mono { font: 13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; fill: #111; }
+    .note { font: italic 13px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #111; }
+    .arrow { stroke: #111; stroke-width: 2.2; fill: none; marker-end: url(#m); }
+  </style>
+
+  <defs>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#111"/>
+    </marker>
+  </defs>
+
+  <!-- Top: Workloads -->
+  <rect class="box" x="140" y="40" width="820" height="110" rx="14"/>
+  <text class="title" x="550" y="76" text-anchor="middle">APPLICATIONS / WORKLOADS</text>
+  <text class="t" x="550" y="105" text-anchor="middle">numeric kernels · inference · DSP-ish paths · analytics</text>
+  <text class="t" x="550" y="128" text-anchor="middle">control logic · OS/user applications</text>
+
+  <!-- Arrow -->
+  <path class="arrow" d="M550 150 L550 195"/>
+  <text class="note" x="565" y="185">opt-in ternary semantics</text>
+
+  <!-- Middle: Ternary semantic layer -->
+  <rect class="box" x="70" y="210" width="960" height="240" rx="14"/>
+  <text class="title" x="550" y="245" text-anchor="middle">DUOTRONIC SEMANTIC LAYER (TERNARY)</text>
+
+  <text class="h" x="110" y="285">Meaning-carrying value space</text>
+  <text class="mono" x="130" y="310">−1  = negative / false</text>
+  <text class="mono" x="130" y="332"> 0  = neutral  / unknown</text>
+  <text class="mono" x="130" y="354">+1  = positive / true</text>
+
+  <text class="h" x="580" y="285">Ternary-native semantic kernels</text>
+  <text class="mono" x="600" y="310">TMIN · TMAX · TNOT · TMAJ · TMUX · TNET</text>
+
+  <text class="h" x="110" y="392">Software forms</text>
+  <text class="t" x="130" y="416">intrinsics · helper ABI · packed trits · vector backends</text>
+
+  <!-- Arrow -->
+  <path class="arrow" d="M550 450 L550 495"/>
+  <text class="note" x="565" y="485">implemented atop / alongside binary</text>
+
+  <!-- Bottom: Binary substrate -->
+  <rect class="box" x="70" y="510" width="960" height="185" rx="14"/>
+  <text class="title" x="550" y="545" text-anchor="middle">BINARY SUBSTRATE (CONTROL + TRANSPORT)</text>
+
+  <text class="h" x="110" y="580">What stays binary (non-goals to ternarize)</text>
+  <text class="t" x="130" y="606">• addressing, pointers, virtual memory</text>
+  <text class="t" x="130" y="628">• instruction fetch/decode, control plane</text>
+  <text class="t" x="130" y="650">• protection, ABI, exact storage/invariants</text>
+
+  <text class="h" x="610" y="580">Provides</text>
+  <text class="t" x="630" y="606">universality · interoperability · determinism</text>
+
+  <!-- Optional hardware note -->
+  <text class="note" x="550" y="728" text-anchor="middle">TLU is an optional accelerator; software fallback remains valid.</text>
+</svg>
