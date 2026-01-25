@@ -417,10 +417,6 @@ Expansion of dimensions does not imply expansion of scope.
 
 ---
 
-Below is **Part V — Constraint Surfaces**, drafted to **introduce constraint structure without advocacy, optimization claims, or implied remedies**. The tone remains analytic, conservative, and non-prescriptive.
-
----
-
 ## Part V — Constraint Surfaces
 
 ### 21. Overview
