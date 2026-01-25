@@ -53,6 +53,21 @@ Those projects may reference this white paper, but this paper does not depend on
 
 The goal is clarity and falsifiability, not momentum.
 
+## Document Structure and Reading Order
+
+This repository is intentionally structured to separate semantics, analysis, and interpretation:
+
+1. **TLU_WHITEPAPER.md**  
+   Normative definition of TLU semantics, scope, and evaluation criteria.
+
+2. **DUOTRONIC_MODEL.md**  
+   Non-normative analytic model describing semantic constraint surfaces and applicability.
+
+3. **DUOTRONIC_MODEL_CLARIFICATIONS.md**  
+   Interpretive constraints that explicitly invalidate common misreadings.
+
+Readers are strongly advised to consult the clarification document before drawing conclusions or proposing extensions.
+
 ## License
 
 MIT
