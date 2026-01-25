@@ -72,4 +72,4 @@ Readers are strongly advised to consult the clarification document before drawin
 
 MIT
 
-This repository is frozen at v0.2 except for errata. Experimental work lives elsewhere.
+This repository is frozen at v0.3 except for errata. Experimental work lives elsewhere.
