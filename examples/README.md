@@ -1,7 +1,7 @@
 # Examples
 
-This directory contains **reference and experimental implementations** related to
-the Ternary Logic Unit (TLU) semantics defined in `appendix.md`.
+This directory contains **reference implementations and non-normative experimental helpers**
+related to the Ternary Logic Unit (TLU) semantics defined in `appendix.md`.
 
 ## Canonical Reference
 
@@ -12,6 +12,8 @@ the Ternary Logic Unit (TLU) semantics defined in `appendix.md`.
 
   All observable behavior must match this reference.
 
+  Conformance requirements are defined in `CONFORMANCE.md`.
+
 ## Experimental Helpers
 
 - **`ternary_numpy.py`**  
@@ -19,11 +21,11 @@ the Ternary Logic Unit (TLU) semantics defined in `appendix.md`.
   using NumPy-style array operations. This file exists solely to support
   prototyping, vectorized experimentation, and exploratory evaluation.
 
-  It must not be treated as a semantic reference.
+  It must not be treated as a semantic reference.  
+  Behavioral divergence from `ternary_reference.py` invalidates experimental conclusions.
 
 ## Notes
 
 - Files in this directory are **not optimized**.
 - None of the implementations are intended as production backends.
 - Only `ternary_reference.py` defines authoritative semantics.
-
