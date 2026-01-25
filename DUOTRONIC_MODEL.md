@@ -107,12 +107,6 @@
 
 ---
 
-Below is a **full draft of Parts I–III** of `DUOTRONIC_MODEL.md`, written in a **spec-adjacent, neutral tone**, with explicit constraints and no semantic expansion beyond what is already implied by the TLU whitepaper.
-
-This text is suitable for direct inclusion.
-
----
-
 # DUOTRONIC MODEL
 
 ---
