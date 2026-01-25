@@ -31,6 +31,8 @@ The authoritative executable reference for TLU semantics is:
 
 All conformant implementations must produce results **observationally equivalent** to this reference for the operations they claim to support.
 
+Observational equivalence is defined as **identical outputs for all inputs within the supported domain**, excluding timing behavior, performance characteristics, resource usage, or microarchitectural effects.
+
 Where discrepancies arise between prose and code, the **appendix.md definitions take precedence**, followed by the reference implementation as an executable oracle.
 
 ---
@@ -50,9 +52,19 @@ Vector or lane-wise behavior, where applicable, must be equivalent to applying t
 
 ---
 
+### 3.1 Partial Conformance
+
+Implementations that support only a subset of the required operations must **explicitly state which operations are implemented**.
+
+Claims of TLU conformance **without full support for the required operation set are invalid**.
+
+Partial implementations may not imply or advertise full TLU conformance.
+
+---
+
 ## 4. Software Fallback Requirement
 
-All implementations must have a correct **software fallback** path.
+All implementations must provide a correct **software fallback** path.
 
 Hardware acceleration, if present, must:
 
@@ -85,6 +97,8 @@ Conformance does **not** require:
 * SIMD, GPU, or accelerator support
 * compatibility with any particular compiler or ISA
 
+Conformance does **not** permit extension, augmentation, or reinterpretation of TLU semantics beyond those defined in the normative reference.
+
 Claims beyond semantic correctness are explicitly out of scope.
 
 ---
@@ -95,10 +109,15 @@ Conformance is defined relative to a specific released version of this repositor
 
 Changes to `appendix.md` or `ternary_reference.py` may introduce new conformance requirements and must be versioned accordingly.
 
+Implementations must state the specific version against which conformance is claimed.
+
 ---
 
-## 8. Statement of Intent
+## 8. Conformance Rationale
 
 This conformance model exists to ensure that experimentation with ternary semantics remains **comparable, falsifiable, and interoperable**.
 
-Correctness precedes optimization. Failure to demonstrate semantic equivalence is sufficient to invalidate a TLU implementation claim.
+Correctness precedes optimization.
+Failure to demonstrate semantic equivalence is sufficient to invalidate a TLU implementation claim.
+
+---
