@@ -1,15 +1,3 @@
-Below is a **full, clean reprint of `appendix.md`**, incorporating:
-
-* all prior **normative hardening**
-* explicit **observability definitions**
-* clarified **encoding normalization**
-* tightened **TNET correctness**
-* and the new **Worked Semantic Examples** section (Informative)
-
-This is a **ready-to-commit** document.
-
----
-
 # Appendix: Formal Semantics and Reference Material
 
 This appendix supports the **TLU White Paper** by collecting formal definitions,
