@@ -1,8 +1,25 @@
+Below is a **full, clean reprint of `appendix.md`**, incorporating:
+
+* all prior **normative hardening**
+* explicit **observability definitions**
+* clarified **encoding normalization**
+* tightened **TNET correctness**
+* and the new **Worked Semantic Examples** section (Informative)
+
+This is a **ready-to-commit** document.
+
+---
+
 # Appendix: Formal Semantics and Reference Material
 
-This appendix supports the **TLU White Paper** by collecting formal definitions, truth tables, and clarifying notes that are intentionally kept out of the main document.
+This appendix supports the **TLU White Paper** by collecting formal definitions,
+truth tables, and clarifying notes that are intentionally kept out of the main document.
 
-Sections marked **Normative** define required semantics. Other sections are informative and non-binding.
+Sections marked **Normative** define required semantics.
+Other sections are informative and non-binding.
+
+The executable reference implementation in `examples/ternary_reference.py`
+is required to be **observationally equivalent** to all normative definitions herein.
 
 ---
 
@@ -14,7 +31,8 @@ All ternary semantics in this repository assume **balanced ternary** trits with 
 * **0**  : neutral / unknown
 * **+1** : positive / true
 
-No other trit values are valid. Any invalid representation must normalize to one of the above values.
+No other trit values are valid. Any invalid representation must normalize
+to one of the above values.
 
 The total order over trits is:
 
@@ -37,7 +55,11 @@ For software and interoperability purposes, a canonical binary encoding is assum
 
 Invalid encodings **must normalize to `0`**.
 
-This appendix specifies *semantic meaning only*. Alternative internal encodings are permitted so long as observable behavior matches the definitions below.
+Normalization must occur **prior to semantic evaluation** of any operator.
+
+This appendix specifies *semantic meaning only*.
+Alternative internal encodings are permitted so long as **observable behavior**
+matches the definitions below.
 
 ---
 
@@ -51,7 +73,17 @@ Let the trit domain be:
 𝕋 = { −1, 0, +1 }
 ```
 
-All scalar operators act on elements of `𝕋`. For vectors or words, operators apply **lane-wise** unless explicitly stated otherwise. Reduction operators specify their aggregation semantics independently of storage or representation.
+All scalar operators act on elements of `𝕋`.
+
+For vectors or words, operators apply **lane-wise**
+unless explicitly stated otherwise.
+
+Reduction operators specify their aggregation semantics
+independently of storage or representation.
+
+**Observable behavior** refers solely to the returned trit or numeric value
+defined by the operator semantics, excluding timing, side effects,
+memory access patterns, or resource usage.
 
 ---
 
@@ -85,14 +117,11 @@ These definitions treat `0` as a first-class middle value and require no special
 
 #### Properties (Informative)
 
-* Commutative: `TMIN(a,b) = TMIN(b,a)` and `TMAX(a,b) = TMAX(b,a)`
-* Associative: `TMIN(a, TMIN(b,c)) = TMIN(TMIN(a,b), c)` (same for `TMAX`)
-* Idempotent: `TMIN(a,a) = a` and `TMAX(a,a) = a`
-* Absorption:
-
-  * `TMIN(a, TMAX(a,b)) = a`
-  * `TMAX(a, TMIN(a,b)) = a`
-* Monotonic: increasing any argument cannot decrease `TMAX` or increase `TMIN`
+* Commutative
+* Associative
+* Idempotent
+* Absorption laws hold
+* Monotonic with respect to trit ordering
 
 ---
 
@@ -106,33 +135,16 @@ This definition uniquely determines all cases, including when all three inputs d
 
 #### Equivalent Rule Form
 
-* If at least two inputs are `+1`, the result is `+1`.
-* Else if at least two inputs are `−1`, the result is `−1`.
-* Otherwise, the result is `0`.
-
-#### Count-Based Characterization
-
-Let `(n−, n0, n+)` be the counts of `−1`, `0`, and `+1` among the inputs.
-
-| (n−, n0, n+) | Example    | Result |
-| -----------: | ---------- | :----: |
-|      (3,0,0) | (−1,−1,−1) |   −1   |
-|      (2,1,0) | (−1,−1,0)  |   −1   |
-|      (2,0,1) | (−1,−1,+1) |   −1   |
-|      (1,2,0) | (−1,0,0)   |    0   |
-|      (1,1,1) | (−1,0,+1)  |    0   |
-|      (1,0,2) | (−1,+1,+1) |   +1   |
-|      (0,3,0) | (0,0,0)    |    0   |
-|      (0,2,1) | (0,0,+1)   |    0   |
-|      (0,1,2) | (0,+1,+1)  |   +1   |
-|      (0,0,3) | (+1,+1,+1) |   +1   |
+* If at least two inputs are `+1`, the result is `+1`
+* Else if at least two inputs are `−1`, the result is `−1`
+* Otherwise, the result is `0`
 
 #### Properties (Informative)
 
-* Symmetric under permutation of inputs
-* Idempotent: `TMAJ(a,a,b) = a`
-* Median law: the result is always one of the inputs and lies between the other two
-* Stability: replacing one input with the result does not change the outcome
+* Symmetric under permutation
+* Idempotent
+* Median law holds
+* Stability under replacement
 
 ---
 
@@ -154,19 +166,12 @@ Zeros contribute no value.
 TNET(x) ∈ [ −N , +N ]
 ```
 
-The numeric value is normative. The representation of that value (binary integer, balanced ternary integer, saturation behavior) is **explicitly out of scope** and delegated to the consuming context.
+The numeric value is normative.
 
-#### Examples
+**Saturation, clipping, or modular reduction of the numeric result is not permitted**
+within the definition of `TNET` itself.
 
-* `(+1,+1,0,0,0,−1,0,0)` → `1`
-* `(−1,−1,−1,0,+1,0,+1,0)` → `−1`
-* `(0,0,0,0,0,0,0,0)` → `0`
-
-#### Properties (Informative)
-
-* Linearity: `TNET(x ∪ y) = TNET(x) + TNET(y)` when lane-wise addition does not overflow outside `𝕋`
-* Sign symmetry: `TNET(−x) = −TNET(x)` where `−x` is lane-wise negation
-* Neutral invariance: adding or removing `0` lanes does not affect the result
+The representation of the result is explicitly out of scope.
 
 ---
 
@@ -184,12 +189,6 @@ The numeric value is normative. The representation of that value (binary integer
 |  0  |    0    |
 |  +1 |    −1   |
 
-#### Properties (Informative)
-
-* Involutive: `TNOT(TNOT(a)) = a`
-* Neutral preserving: `TNOT(0) = 0`
-* Sign symmetry: `TNOT(a) = −a`
-
 ---
 
 ### C.5 TMUX (Ternary Select)
@@ -204,11 +203,7 @@ The numeric value is normative. The representation of that value (binary integer
 |   0  |    B   |
 |  +1  |    C   |
 
-#### Properties (Informative)
-
-* Deterministic: exactly one branch is selected
-* Side-effect free: selection does not modify inputs
-* Vectorizable: applies lane-wise for vector conditions
+Selection is deterministic and side-effect free.
 
 ---
 
@@ -226,30 +221,103 @@ Hardware acceleration must not alter observable behavior.
 
 ## E. Reference Test Vectors (Informative)
 
-Recommended minimal tests:
+Representative tests include:
 
-* `TMIN(+1,0)=0`, `TMIN(0,−1)=−1`, `TMIN(+1,−1)=−1`
-* `TMAX(−1,0)=0`, `TMAX(0,+1)=+1`, `TMAX(−1,+1)=+1`
-* `TMAJ(−1,0,+1)=0` (all permutations)
-* `TMAJ(+1,+1,0)=+1`, `TMAJ(−1,−1,+1)=−1`
-* `TNET([+1,−1,0])=0`, `TNET([+1,+1,−1])=+1`
-* `TNOT(−1)=+1`, `TNOT(0)=0`, `TNOT(+1)=−1`
-* `TMUX(−1,A,B,C)=A`, `TMUX(0,A,B,C)=B`, `TMUX(+1,A,B,C)=C`
+* `TMIN(+1,0)=0`, `TMIN(0,−1)=−1`
+* `TMAX(−1,0)=0`, `TMAX(0,+1)=+1`
+* `TMAJ(−1,0,+1)=0`
+* `TNET([+1,+1,−1])=+1`
+* `TNOT(−1)=+1`
+* `TMUX(0,A,B,C)=B`
 
 ---
 
 ## F. Informative Context and Analogues (Informative)
 
-The semantics defined in this appendix correspond to patterns that already appear in existing systems:
+Related semantic patterns appear in:
 
-* Three-valued logic in database systems (e.g., SQL `NULL` semantics)
-* Median and majority filters in signal processing
-* Majority voting and balance checks in fault-tolerant systems
+* three-valued logic in databases (e.g., SQL `NULL`)
+* median filters in signal processing
+* majority voting in fault-tolerant systems
 
-These analogues are provided solely for orientation and do not imply performance equivalence or preferred application domains.
+These analogues are provided for orientation only.
+
+---
+
+## G. Worked Semantic Examples (Informative)
+
+This section provides small examples illustrating **structural friction**
+when certain semantic patterns are encoded in binary systems.
+
+These examples imply no performance claim or architectural recommendation.
+
+---
+
+### G.1 Neutrality Without Sentinel Conventions
+
+**TLU expression**
+
+```
+y = TMIN(x, 0)
+```
+
+Neutrality propagates structurally.
+
+**Binary encoding**
+
+Requires sentinels, flags, or control-flow discipline.
+
+**Observation**
+
+TLU encodes neutrality as data.
+Binary systems encode neutrality by convention.
+
+---
+
+### G.2 Majority Without Bias
+
+**TLU expression**
+
+```
+r = TMAJ(a, b, c)
+```
+
+Median rule applies uniformly.
+
+**Binary encoding**
+
+Requires explicit case analysis and tie-breaking logic.
+
+**Observation**
+
+TLU encodes majority directly.
+Binary systems reconstruct it procedurally.
+
+---
+
+### G.3 Balanced Reduction
+
+**TLU expression**
+
+```
+s = TNET(x)
+```
+
+Positive and negative contributions cancel symmetrically.
+
+**Binary encoding**
+
+Requires multiple counters or post-processing.
+
+**Observation**
+
+TLU encodes balance structurally.
+Binary systems approximate balance arithmetically.
 
 ---
 
 ## Status
 
 This appendix is considered **stable** once referenced by a released white paper version.
+
+---
