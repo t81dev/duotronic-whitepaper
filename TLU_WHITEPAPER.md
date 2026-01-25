@@ -2,15 +2,29 @@
 
 ## A Duotronic Coprocessor for Meaning-Aware Computing
 
-**Version:** 0.2 (Conservative Revision)
+**Version:** 0.3 (Clarified Revision)
 
 ---
 
-### Abstract
+## Document Set and Authority
+
+This paper is part of a bounded document set:
+
+* **`TLU_WHITEPAPER.md`** — *normative* definition of TLU semantics, scope, and evaluation criteria
+* **`DUOTRONIC_MODEL.md`** — *non-normative* analytic model for reasoning about semantic constraints and applicability
+* Clarification documents (if present) — interpretive constraints only; no semantic authority
+
+This paper is authoritative only with respect to TLU semantics and evaluation criteria.
+
+---
+
+## Abstract
 
 Binary computing provides precision, determinism, and universality. These strengths make it the ideal substrate for control flow, addressing, and exact storage. However, many modern workloads—particularly numeric, statistical, and inference-driven systems—require explicit handling of **neutrality, uncertainty, and symmetry**. In binary systems, these properties are typically simulated using flags, sentinel values, masks, or control-flow conventions.
 
-This paper proposes the **Ternary Logic Unit (TLU)** as a *duotronic coprocessor*: an optional, bounded execution unit that augments binary systems by making three-valued logic and balanced arithmetic **explicit and structurally supported**, without altering binary control planes, memory models, or ABI invariants.
+This paper proposes the **Ternary Logic Unit (TLU)** as a *duotronic coprocessor*: an optional, bounded execution unit that augments binary systems by making three-valued logic and balanced semantics **explicit and structurally supported**, without altering binary control planes, memory models, or ABI invariants.
+
+In this context, *meaning-aware* refers strictly to the explicit representation and propagation of neutrality, uncertainty, and symmetry according to deterministic semantic rules.
 
 The TLU does not replace binary computation. It is a semantic accelerator for narrowly defined classes of problems where binary representations incur unavoidable structural overhead.
 
@@ -51,9 +65,12 @@ The TLU follows the same ordering: semantic definition first, optional hardware 
 
 ---
 
-## 3. The Duotronic Model
+## 3. Duotronic Separation Summary
 
-The duotronic model explicitly separates responsibilities between binary and ternary domains.
+The **Duotronic Model** is defined in `DUOTRONIC_MODEL.md`.
+This section provides a **non-normative summary** of the separation principle for orientation only.
+
+The duotronic approach explicitly separates responsibilities between binary and ternary domains:
 
 | Responsibility               | Binary | Ternary |
 | ---------------------------- | ------ | ------- |
@@ -64,7 +81,8 @@ The duotronic model explicitly separates responsibilities between binary and ter
 | Uncertainty propagation      | ✘      | ✔       |
 | Symmetric reductions         | ✘      | ✔       |
 
-Binary remains the universal substrate for execution and interoperability. Ternary logic is introduced only where three-valued semantics are structurally advantageous.
+Binary remains the universal substrate for execution and interoperability.
+Ternary logic is introduced only where three-valued semantics are structurally advantageous.
 
 ---
 
@@ -72,13 +90,17 @@ Binary remains the universal substrate for execution and interoperability. Terna
 
 The TLU intentionally exposes a minimal set of operations whose semantics require three-valued logic and are cumbersome to reproduce using binary primitives alone.
 
-Representative operations include:
+This paper defines **ternary logical semantics**. Balanced arithmetic is treated as a representationally compatible domain rather than a source of semantic authority.
+
+Representative semantic kernels include:
 
 * **TMIN / TMAX** — Kleene-style minimum and maximum with explicit neutral propagation
 * **TNOT** — sign inversion that preserves neutrality
 * **TMAJ** — majority vote with deterministic neutral resolution
 * **TMUX** — three-way data selection controlled by a ternary condition
 * **TNET** — balanced reduction defined as count(+1) minus count(−1)
+
+These labels are mnemonic identifiers for semantic kernels, not an instruction-set commitment.
 
 Each operation is fully defined by truth tables and deterministic propagation rules. Binary emulation is always possible but relies on multi-step sequences and control-flow conventions.
 
@@ -136,8 +158,10 @@ Failure to meet these criteria invalidates the case for a TLU in that context.
 
 ## 9. Conclusion
 
-The Ternary Logic Unit is a proposal to make neutrality, uncertainty, and balance explicit and structurally supported within modern computing systems.
+The Ternary Logic Unit is a proposal to make neutrality, uncertainty, and symmetry explicit and structurally supported within modern computing systems.
 
 It does not replace binary logic; it complements it where three-valued semantics are intrinsic to the problem domain.
 
 Whether the TLU proves practically useful or not, clearly defining its scope and semantics establishes a principled boundary for ternary computation in contemporary systems.
+
+---
