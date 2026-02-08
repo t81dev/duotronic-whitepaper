@@ -66,6 +66,9 @@ This repository is intentionally structured to separate semantics, analysis, and
 3. **DUOTRONIC_MODEL_CLARIFICATIONS.md**  
    Interpretive constraints that explicitly invalidate common misreadings.
 
+4. **TERMINOLOGY_ALIGNMENT.md**
+   Canonical term mapping and conflict-resolution notes aligned with ecosystem glossary guidance.
+
 Readers are strongly advised to consult the clarification document before drawing conclusions or proposing extensions.
 
 ## License
